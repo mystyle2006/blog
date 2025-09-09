@@ -94,17 +94,18 @@ export const getPublishedPosts = async (tagFilter?: string, sort?: string) => {
   };
 
   // 태그 필터가 있는 경우 추가
-  const filters = tagFilter
-    ? [
-        baseFilter,
-        {
-          property: 'Tags',
-          multi_select: {
-            contains: tagFilter,
+  const filters =
+    tagFilter && tagFilter !== '전체'
+      ? [
+          baseFilter,
+          {
+            property: 'Tags',
+            multi_select: {
+              contains: tagFilter,
+            },
           },
-        },
-      ]
-    : [baseFilter];
+        ]
+      : [baseFilter];
 
   const response = await notion.dataSources.query({
     data_source_id: process.env.NOTION_DATABASE_SOURCE_ID!,

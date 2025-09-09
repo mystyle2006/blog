@@ -1,29 +1,43 @@
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import Link from 'next/link';
-export default function Home() {
+import TagSection from '@/app/_components/TagSection';
+import ProfileSection from '@/app/_components/ProfileSection';
+import ContactSection from '@/app/_components/ContactSection';
+import { getPublishedPostTags, getPublishedPosts } from '@/lib/notion';
+import HeaderSection from '@/app/_components/HeaderSection';
+import PostList from '@/components/features/blog/PostList';
+interface BlogProps {
+  searchParams: Promise<{ tag?: string; sort?: string }>;
+}
+
+export default async function Blog({ searchParams }: BlogProps) {
+  const { tag, sort } = await searchParams;
+  const selectedTag = tag || '전체';
+  const selectedSort = sort || 'latest';
+
+  const [posts, tags] = await Promise.all([
+    getPublishedPosts(selectedTag, selectedSort),
+    getPublishedPostTags(),
+  ]);
+
+  console.log(selectedTag, selectedSort);
+
   return (
     <div className="container py-8">
-      <div className="space-y-8">
-        {/* 섹션 제목 */}
-        <h2 className="text-3xl font-bold tracking-tight">블로그 목록</h2>
-
-        {/* 블로그 카드 그리드 */}
-        <div className="grid gap-4">
-          {/* 블로그 카드 반복 */}
-          {[1, 2, 3].map((i) => (
-            <Link href={`/blog/${i}`} key={i}>
-              <Card key={i}>
-                <CardHeader>
-                  <CardTitle>블로그 제목 {i}</CardTitle>
-                  <CardDescription>
-                    이것은 블로그 포스트에 대한 간단한 설명입니다. 여러 줄의 텍스트가 있을 수
-                    있습니다.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-          ))}
+      <div className="grid grid-cols-[200px_1fr_220px] gap-6">
+        {/* 좌측 사이드바 */}
+        <aside>
+          <TagSection tags={tags} selectedTag={selectedTag} />
+        </aside>
+        <div className="space-y-8">
+          {/* 섹션 제목 */}
+          <HeaderSection selectedTag={selectedTag} />
+          {/* 블로그 카드 그리드 */}
+          <PostList posts={posts} />
         </div>
+        {/* 우측 사이드바 */}
+        <aside className="flex flex-col gap-6">
+          <ProfileSection />
+          <ContactSection />
+        </aside>
       </div>
     </div>
   );
