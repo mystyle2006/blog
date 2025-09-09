@@ -84,7 +84,7 @@ export const getPostBySlug = async (
   };
 };
 
-export const getPublishedPosts = async (tagFilter?: string) => {
+export const getPublishedPosts = async (tagFilter?: string, sort?: string) => {
   // 기본 필터: Published 상태
   const baseFilter = {
     property: 'Status',
@@ -117,7 +117,7 @@ export const getPublishedPosts = async (tagFilter?: string) => {
     sorts: [
       {
         property: 'Date',
-        direction: 'descending',
+        direction: sort === 'latest' ? 'descending' : 'ascending',
       },
     ],
   });
