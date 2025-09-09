@@ -24,8 +24,6 @@ interface TocEntry {
   children?: Array<TocEntry>;
 }
 
-type Toc = Array<TocEntry>;
-
 function TableOfContentsLink({ item }: { item: TocEntry }) {
   return (
     <div className="space-y-2">
@@ -47,8 +45,12 @@ function TableOfContentsLink({ item }: { item: TocEntry }) {
   );
 }
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+interface BlogPostProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function BlogPost({ params }: BlogPostProps) {
+  const { slug } = await params;
   const { markdown, post } = await getPostBySlug(slug);
 
   const { data } = await compile(markdown, {
