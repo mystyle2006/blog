@@ -1,9 +1,12 @@
 import { Post } from '@/types/blog';
 import { Client, PageObjectResponse, UserObjectResponse } from '@notionhq/client';
+import { NotionToMarkdown } from 'notion-to-md';
 
 export const notion = new Client({
   auth: process.env.NOTION_TOKEN!,
 });
+
+const n2m = new NotionToMarkdown({ notionClient: notion });
 
 function getPostMetadata(page: PageObjectResponse): Post {
   const properties = page.properties;
@@ -72,8 +75,11 @@ export const getPostBySlug = async (
     },
   });
 
+  const mdBlocks = await n2m.pageToMarkdown(response.results[0].id);
+  const { parent } = n2m.toMarkdownString(mdBlocks);
+
   return {
-    markdown: '',
+    markdown: parent,
     post: getPostMetadata(response.results[0] as PageObjectResponse),
   };
 };
