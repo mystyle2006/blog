@@ -18,15 +18,36 @@ const getCoverImageUrl = (cover: PageObjectResponse['cover']): string => {
   return '';
 };
 
-export const getPublishedPosts = async () => {
+export const getPublishedPosts = async (tagFilter?: string) => {
+  // 기본 필터: Published 상태
+  const baseFilter = {
+    property: 'Status',
+    select: {
+      equals: 'Published',
+    },
+  };
+
+  // 태그 필터가 있는 경우 추가
+  const filters = tagFilter
+    ? [
+        baseFilter,
+        {
+          property: 'Tags',
+          multi_select: {
+            contains: tagFilter,
+          },
+        },
+      ]
+    : [baseFilter];
+
   const response = await notion.dataSources.query({
     data_source_id: process.env.NOTION_DATABASE_SOURCE_ID!,
-    filter: {
-      property: 'Status',
-      select: {
-        equals: 'Published',
-      },
-    },
+    filter:
+      filters.length === 1
+        ? baseFilter
+        : {
+            and: filters,
+          },
     sorts: [
       {
         property: 'Date',
@@ -70,4 +91,33 @@ export const getPublishedPosts = async () => {
     });
 
   return posts;
+};
+
+// 태그 데이터 추출 함수
+export const getPublishedPostTags = async () => {
+  // 모든 게시된 포스트 가져오기 (필터링 없이)
+  const allPosts = await getPublishedPosts();
+
+  // 태그 개수 계산
+  const tagCounts = allPosts.reduce(
+    (acc, post) => {
+      post.tags?.forEach((tag) => {
+        acc[tag] = (acc[tag] || 0) + 1;
+      });
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+
+  // 태그 목록 생성
+  const tags = [
+    { id: 'all', name: '전체', count: allPosts.length },
+    ...Object.entries(tagCounts).map(([name, count]) => ({
+      id: name.toLowerCase(),
+      name,
+      count,
+    })),
+  ];
+
+  return tags;
 };

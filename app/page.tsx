@@ -9,39 +9,28 @@ import { PostCard } from '@/components/features/blog/PostCard';
 import TagSection from '@/app/_components/TagSection';
 import ProfileSection from '@/app/_components/ProfileSection';
 import ContactSection from '@/app/_components/ContactSection';
-import { getPublishedPosts } from '@/lib/notion';
-import { Post } from '@/types/blog';
+import { getPublishedPosts, getPublishedPostTags } from '@/lib/notion';
 
-export default async function Home() {
-  // 노션에서 게시된 포스트 데이터 가져오기
-  const posts: Post[] = await getPublishedPosts();
+interface HomeProps {
+  searchParams: Promise<{ tag?: string }>;
+}
 
-  // 태그 데이터를 실제 포스트 데이터에서 추출하여 생성
-  const tagCounts = posts.reduce(
-    (acc, post) => {
-      post.tags?.forEach((tag) => {
-        acc[tag] = (acc[tag] || 0) + 1;
-      });
-      return acc;
-    },
-    {} as Record<string, number>
-  );
+export default async function Home({ searchParams }: HomeProps) {
+  // URL 파라미터에서 태그 필터 가져오기
+  const { tag } = await searchParams;
 
-  const allTags = [
-    { id: 'all', name: '전체', count: posts.length },
-    ...Object.entries(tagCounts).map(([name, count]) => ({
-      id: name.toLowerCase(),
-      name,
-      count,
-    })),
-  ];
+  // 병렬로 데이터 가져오기
+  const [posts, allTags] = await Promise.all([
+    getPublishedPosts(tag), // 필터링된 포스트
+    getPublishedPostTags(), // 전체 태그 목록
+  ]);
 
   return (
     <div className="container py-8">
       <div className="grid grid-cols-[200px_1fr_220px] gap-6">
         {/* 좌측 사이드바 */}
         <aside>
-          <TagSection tags={allTags} />
+          <TagSection tags={allTags} selectedTag={tag} />
         </aside>
 
         <div className="space-y-8">
