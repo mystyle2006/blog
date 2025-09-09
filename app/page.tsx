@@ -10,6 +10,7 @@ import TagSection from '@/app/_components/TagSection';
 import ProfileSection from '@/app/_components/ProfileSection';
 import ContactSection from '@/app/_components/ContactSection';
 import { getPublishedPosts, getPublishedPostTags } from '@/lib/notion';
+import Link from 'next/link';
 
 interface HomeProps {
   searchParams: Promise<{ tag?: string }>;
@@ -51,7 +52,11 @@ export default async function Home({ searchParams }: HomeProps) {
           {/* 블로그 카드 그리드 */}
           <div className="grid gap-4">
             {posts.length > 0 ? (
-              posts.map((post) => <PostCard key={post.id} post={post} />)
+              posts.map((post) => (
+                <Link href={`/blog/${post.slug}`} key={post.id}>
+                  <PostCard post={post} />
+                </Link>
+              ))
             ) : (
               <div className="py-12 text-center">
                 <p className="text-muted-foreground text-lg">아직 게시된 포스트가 없습니다.</p>
