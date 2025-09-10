@@ -1,7 +1,7 @@
 import TagSection from '@/app/_components/client/TagSelection';
 import ProfileSection from '@/app/_components/ProfileSection';
 import ContactSection from '@/app/_components/ContactSection';
-import { getPublishedPostTags } from '@/lib/notion';
+import { getPublishedPostTags, getPublishedPosts } from '@/lib/notion';
 import HeaderSection from '@/app/_components/HeaderSection';
 import PostListSuspense from '@/components/features/blog/PostListSuspense';
 import TagSectionSkeleton from '@/app/_components/TagSelectionSkeleton';
@@ -18,6 +18,8 @@ export default async function Blog({ searchParams }: BlogProps) {
   const selectedSort = sort || 'latest';
 
   const tags = getPublishedPostTags();
+  const postsPromise = getPublishedPosts({ tag: selectedTag, sort: selectedSort });
+
   return (
     <div className="container py-8">
       <div className="grid grid-cols-[200px_1fr_220px] gap-6">
@@ -32,7 +34,7 @@ export default async function Blog({ searchParams }: BlogProps) {
           <HeaderSection selectedTag={selectedTag} />
           {/* 블로그 카드 그리드 */}
           <Suspense fallback={<PostListSkeleton />}>
-            <PostListSuspense selectedTag={selectedTag} selectedSort={selectedSort} />
+            <PostListSuspense postsPromise={postsPromise} />
           </Suspense>
         </div>
         {/* 우측 사이드바 */}

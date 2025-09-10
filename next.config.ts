@@ -21,6 +21,9 @@ const nextConfig: NextConfig = {
       {
         hostname: 'prod-files-secure.s3.us-west-2.amazonaws.com',
       },
+      {
+        hostname: 'www.notion.so',
+      },
     ],
   },
 };

@@ -84,7 +84,24 @@ export const getPostBySlug = async (
   };
 };
 
-export const getPublishedPosts = async (tagFilter?: string, sort?: string) => {
+export interface GetPublishedPostsParams {
+  tag?: string | undefined;
+  sort?: string | undefined;
+  pageSize?: number | undefined;
+  startCursor?: string | undefined;
+}
+export interface GetPublishedPostsResponse {
+  posts: Post[];
+  hasMore: boolean;
+  nextCursor: string | null;
+}
+
+export const getPublishedPosts = async ({
+  tag = '전체',
+  sort = 'latest',
+  pageSize = 2,
+  startCursor,
+}: GetPublishedPostsParams = {}): Promise<GetPublishedPostsResponse> => {
   // 기본 필터: Published 상태
   const baseFilter = {
     property: 'Status',
@@ -95,13 +112,13 @@ export const getPublishedPosts = async (tagFilter?: string, sort?: string) => {
 
   // 태그 필터가 있는 경우 추가
   const filters =
-    tagFilter && tagFilter !== '전체'
+    tag && tag !== '전체'
       ? [
           baseFilter,
           {
             property: 'Tags',
             multi_select: {
-              contains: tagFilter,
+              contains: tag,
             },
           },
         ]
@@ -121,6 +138,8 @@ export const getPublishedPosts = async (tagFilter?: string, sort?: string) => {
         direction: sort === 'latest' ? 'descending' : 'ascending',
       },
     ],
+    page_size: pageSize,
+    ...(startCursor && { start_cursor: startCursor }),
   });
 
   // 노션 응답 데이터를 Post 타입으로 변환
@@ -128,13 +147,17 @@ export const getPublishedPosts = async (tagFilter?: string, sort?: string) => {
     .filter((page): page is PageObjectResponse => page.object === 'page')
     .map(getPostMetadata);
 
-  return posts;
+  return {
+    posts,
+    hasMore: response.has_more,
+    nextCursor: response.next_cursor,
+  };
 };
 
 // 태그 데이터 추출 함수
 export const getPublishedPostTags = async () => {
   // 모든 게시된 포스트 가져오기 (필터링 없이)
-  const allPosts = await getPublishedPosts();
+  const { posts: allPosts } = await getPublishedPosts({ pageSize: 100 });
 
   // 태그 개수 계산
   const tagCounts = allPosts.reduce(
