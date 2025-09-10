@@ -1,9 +1,13 @@
-import TagSection from '@/app/_components/TagSection';
+import TagSection from '@/app/_components/client/TagSelection';
 import ProfileSection from '@/app/_components/ProfileSection';
 import ContactSection from '@/app/_components/ContactSection';
-import { getPublishedPostTags, getPublishedPosts } from '@/lib/notion';
+import { getPublishedPostTags } from '@/lib/notion';
 import HeaderSection from '@/app/_components/HeaderSection';
-import PostList from '@/components/features/blog/PostList';
+import PostListSuspense from '@/components/features/blog/PostListSuspense';
+import TagSectionSkeleton from '@/app/_components/TagSelectionSkeleton';
+import { Suspense } from 'react';
+import PostListSkeleton from '@/components/features/blog/PostListSkeleton';
+
 interface BlogProps {
   searchParams: Promise<{ tag?: string; sort?: string }>;
 }
@@ -13,25 +17,23 @@ export default async function Blog({ searchParams }: BlogProps) {
   const selectedTag = tag || '전체';
   const selectedSort = sort || 'latest';
 
-  const [posts, tags] = await Promise.all([
-    getPublishedPosts(selectedTag, selectedSort),
-    getPublishedPostTags(),
-  ]);
-
-  console.log(selectedTag, selectedSort);
-
+  const tags = getPublishedPostTags();
   return (
     <div className="container py-8">
       <div className="grid grid-cols-[200px_1fr_220px] gap-6">
         {/* 좌측 사이드바 */}
         <aside>
-          <TagSection tags={tags} selectedTag={selectedTag} />
+          <Suspense fallback={<TagSectionSkeleton />}>
+            <TagSection tags={tags} selectedTag={selectedTag} />
+          </Suspense>
         </aside>
         <div className="space-y-8">
           {/* 섹션 제목 */}
           <HeaderSection selectedTag={selectedTag} />
           {/* 블로그 카드 그리드 */}
-          <PostList posts={posts} />
+          <Suspense fallback={<PostListSkeleton />}>
+            <PostListSuspense selectedTag={selectedTag} selectedSort={selectedSort} />
+          </Suspense>
         </div>
         {/* 우측 사이드바 */}
         <aside className="flex flex-col gap-6">

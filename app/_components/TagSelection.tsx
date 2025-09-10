@@ -8,7 +8,7 @@ interface TagSectionProps {
   selectedTag?: string | undefined;
 }
 
-export default function TagSection({ tags, selectedTag }: TagSectionProps) {
+export default function TagSelection({ tags, selectedTag }: TagSectionProps) {
   return (
     <Card>
       <CardHeader>
