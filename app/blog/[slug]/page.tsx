@@ -16,6 +16,7 @@ import withToc from '@stefanprobst/rehype-extract-toc';
 import withTocExport from '@stefanprobst/rehype-extract-toc/mdx';
 import GiscusComments from '@/components/GiscusComments';
 import notFound from '@/app/blog/[slug]/not-found';
+import { Metadata } from 'next';
 
 interface TocEntry {
   value: string;
@@ -57,6 +58,44 @@ export const generateStaticParams = async () => {
 };
 
 export const revalidate = 60;
+
+// 동적 메타데이터 생성
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const { post } = await getPostBySlug(slug);
+
+  if (!post) {
+    return {
+      title: '포스트를 찾을 수 없습니다',
+      description: '요청하신 블로그 포스트를 찾을 수 없습니다.',
+    };
+  }
+
+  return {
+    title: post.title,
+    description: post.description || `${post.title} - INHO 블로그`,
+    keywords: post.tags,
+    authors: [{ name: post.author || 'INHO' }],
+    publisher: 'INHO',
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      url: `/blog/${post.slug}`,
+      type: 'article',
+      publishedTime: post.date,
+      modifiedTime: post.modifiedDate,
+      authors: post.author || 'INHO',
+      tags: post.tags,
+    },
+  };
+}
 
 export default async function BlogPost({ params }: BlogPostProps) {
   const { slug } = await params;
