@@ -1,19 +1,12 @@
 'use client'; // Error boundaries must be Client Components
 
-import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 export default function Error({
-  error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
-  }, [error]);
-
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-md flex-col items-center gap-4 text-center">
@@ -32,3 +25,4 @@ export default function Error({
       </div>
     </div>
   );
+}
