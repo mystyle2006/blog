@@ -1,27 +1,25 @@
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { BookOpen, Github, Instagram, Youtube } from 'lucide-react';
 import Image from 'next/image';
 
-const socialLinks = [
-  {
-    icon: Youtube,
+// const socialLinks = [
+//   {
+//     icon: Youtube,
 
-    href: 'https://www.youtube.com/gymcoding',
-  },
-  {
-    icon: Github,
-    href: 'https://github.com/gymcoding',
-  },
-  {
-    icon: BookOpen,
-    href: 'https://www.inflearn.com/users/432199/@gymcoding',
-  },
-  {
-    icon: Instagram,
-    href: 'https://www.instagram.com/gymcoding',
-  },
-];
+//     href: 'https://www.youtube.com/gymcoding',
+//   },
+//   {
+//     icon: Github,
+//     href: 'https://github.com/gymcoding',
+//   },
+//   {
+//     icon: BookOpen,
+//     href: 'https://www.inflearn.com/users/432199/@gymcoding',
+//   },
+//   {
+//     icon: Instagram,
+//     href: 'https://www.instagram.com/gymcoding',
+//   },
+// ];
 
 export default function ProfileSection() {
   return (
@@ -47,7 +45,7 @@ export default function ProfileSection() {
             <p className="text-primary text-sm">Full Stack Developer</p>
           </div>
 
-          <div className="flex justify-center gap-2">
+          {/* <div className="flex justify-center gap-2">
             {socialLinks.map((item, index) => (
               <Button key={index} variant="ghost" className="bg-primary/10" size="icon" asChild>
                 <a href={item.href} target="_blank" rel="noopener noreferrer">
@@ -55,9 +53,9 @@ export default function ProfileSection() {
                 </a>
               </Button>
             ))}
-          </div>
+          </div> */}
 
-          <p className="bg-primary/10 rounded p-2 text-center text-sm">코딩 교육 크리에이터 ✨</p>
+          {/* <p className="bg-primary/10 rounded p-2 text-center text-sm">코딩 교육 크리에이터 ✨</p> */}
         </div>
       </CardContent>
     </Card>

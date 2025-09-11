@@ -18,8 +18,8 @@ export default function TagSelection({ tags, selectedTag }: TagSectionProps) {
         <div className="flex flex-col gap-3">
           {tags.map((tag) => {
             const isSelected =
-              selectedTag === tag.name || (selectedTag === undefined && tag.name === '전체');
-            const href = tag.name === '전체' ? '/' : `?tag=${tag.name}`;
+              selectedTag === tag.name || (selectedTag === undefined && tag.name === 'ALL');
+            const href = tag.name === 'ALL' ? '/' : `?tag=${tag.name}`;
 
             return (
               <Link href={href} key={tag.name}>

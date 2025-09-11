@@ -104,7 +104,7 @@ export interface GetPublishedPostsResponse {
 }
 
 export const getPublishedPosts = async ({
-  tag = '전체',
+  tag = 'ALL',
   sort = 'latest',
   pageSize = 2,
   startCursor,
@@ -119,7 +119,7 @@ export const getPublishedPosts = async ({
 
   // 태그 필터가 있는 경우 추가
   const filters =
-    tag && tag !== '전체'
+    tag && tag !== 'ALL'
       ? [
           baseFilter,
           {
@@ -179,7 +179,7 @@ export const getPublishedPostTags = async () => {
 
   // 태그 목록 생성
   const tags = [
-    { id: 'all', name: '전체', count: allPosts.length },
+    { id: 'all', name: 'ALL', count: allPosts.length },
     ...Object.entries(tagCounts).map(([name, count]) => ({
       id: name.toLowerCase(),
       name,

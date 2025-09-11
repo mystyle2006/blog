@@ -14,8 +14,9 @@ interface HomeProps {
 }
 
 export const metadata: Metadata = {
-  title: '홈',
-  description: 'INHO의 블로그입니다. 개발 지식과 경험을 공유합니다.',
+  title: 'Home',
+  description:
+    "INHO's Blog is a blog about development and sharing various knowledge and experiences.",
   alternates: {
     canonical: '/',
   },
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
 
 export default async function Home({ searchParams }: HomeProps) {
   const { tag, sort } = await searchParams;
-  const selectedTag = tag || '전체';
+  const selectedTag = tag || 'ALL';
   const selectedSort = sort || 'latest';
 
   const tags = getPublishedPostTags();
@@ -49,7 +50,7 @@ export default async function Home({ searchParams }: HomeProps) {
         {/* 우측 사이드바 */}
         <aside className="order-1 flex flex-col gap-6 md:order-none">
           <ProfileSection />
-          <ContactSection />
+          {/* <ContactSection /> */}
         </aside>
       </div>
     </div>
