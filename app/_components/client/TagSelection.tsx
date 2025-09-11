@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { TagFilterItem } from '@/types/blog';
 import { cn } from '@/lib/utils';
 import { use } from 'react';
+
 interface TagSectionProps {
   tags: Promise<TagFilterItem[]>;
   selectedTag: string;
@@ -15,7 +16,7 @@ export default function TagSection({ tags, selectedTag }: TagSectionProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>태그 목록</CardTitle>
+        <CardTitle>Tags</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-3">

@@ -27,7 +27,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const selectedSort = sort || 'latest';
 
   const tags = getPublishedPostTags();
-  const postsPromise = getPublishedPosts({ tag: selectedTag, sort: selectedSort });
+  const posts = getPublishedPosts({ tag: selectedTag, sort: selectedSort });
 
   return (
     <div className="container py-8">
@@ -43,7 +43,7 @@ export default async function Home({ searchParams }: HomeProps) {
           <HeaderSection selectedTag={selectedTag} />
           {/* 블로그 카드 그리드 */}
           <Suspense fallback={<PostListSkeleton />}>
-            <PostListSuspense postsPromise={postsPromise} />
+            <PostListSuspense posts={posts} />
           </Suspense>
         </div>
         {/* 우측 사이드바 */}

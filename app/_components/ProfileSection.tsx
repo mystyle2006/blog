@@ -30,7 +30,7 @@ export default function ProfileSection() {
             <div className="bg-muted rounded-full p-2">
               <div className="h-36 w-36 overflow-hidden rounded-full">
                 <Image
-                  src="/images/profile-light.png"
+                  src="/images/me.png"
                   alt="INHO"
                   width={144}
                   height={144}

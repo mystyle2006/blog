@@ -10,11 +10,11 @@ import { useInView } from 'react-intersection-observer';
 import { Loader2 } from 'lucide-react';
 
 interface PostListProps {
-  postsPromise: Promise<GetPublishedPostsResponse>;
+  posts: Promise<GetPublishedPostsResponse>;
 }
 
-export default function PostList({ postsPromise }: PostListProps) {
-  const initialData = use(postsPromise);
+export default function PostList({ posts }: PostListProps) {
+  const initialData = use(posts);
   const searchParams = useSearchParams();
   const tag = searchParams.get('tag');
   const sort = searchParams.get('sort');
@@ -70,7 +70,7 @@ export default function PostList({ postsPromise }: PostListProps) {
       {isFetchingNextPage && (
         <div className="flex items-center justify-center gap-2 py-4">
           <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
-          <span className="text-muted-foreground text-sm">로딩중...</span>
+          <span className="text-muted-foreground text-sm">Loading...</span>
         </div>
       )}
     </div>
