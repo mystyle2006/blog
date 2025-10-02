@@ -146,7 +146,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
           {/* 모바일 전용 목차 */}
           <div className="sticky top-[var(--sticky-top)] mb-6 md:hidden">
             <details className="bg-muted/60 rounded-lg p-4 backdrop-blur-sm">
-              <summary className="cursor-pointer text-lg font-semibold">목차</summary>
+              <summary className="cursor-pointer text-lg font-semibold">Index</summary>
               <nav className="mt-3 space-y-3 text-sm">
                 {data?.toc?.map((item) => (
                   <TableOfContentsLink key={item.id} item={item} />
@@ -175,7 +175,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
         <aside className="relative hidden md:block">
           <div className="sticky top-[var(--sticky-top)]">
             <div className="bg-muted/60 space-y-4 rounded-lg p-6 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold">목차</h3>
+              <h3 className="text-lg font-semibold">Index</h3>
               <nav className="space-y-3 text-sm">
                 {data?.toc?.map((item) => (
                   <TableOfContentsLink key={item.id} item={item} />
